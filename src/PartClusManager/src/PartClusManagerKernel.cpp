@@ -656,6 +656,7 @@ void PartClusManagerKernel::computePartitionResult(unsigned partitionId, std::st
                 unsigned long edgeTotalWeigth = 0; 
                 std::vector<unsigned long> setSize (_options.getTargetPartitions(),0);
                 std::vector<unsigned long> setArea (_options.getTargetPartitions(),0);
+		std::vector<unsigned long> partCuts (_options.getTargetPartitions(),0);
                 
                 std::vector<int> hyperedgesEnd = _hypergraph.getRowPtr();
                 std::vector<int> hyperedgeNets = _hypergraph.getColIdx();
@@ -712,6 +713,10 @@ void PartClusManagerKernel::computePartitionResult(unsigned partitionId, std::st
 
                                 edgeTotalWeigth = edgeTotalWeigth + auxWeight;
                         }
+			for (unsigned long partNum : netPartitions){
+                                partCuts[partNum] = partCuts[partNum] + 1;
+                        }
+                        
                         startIndex = endIndex;
                 }
 
@@ -795,7 +800,7 @@ void PartClusManagerKernel::reportPartitionResult(unsigned partitionId){
         std::cout << "Number of Terminals = " << currentResults.getBestNumTerminals() << ".\n";
         std::cout << "Cluster Size SD = " << currentResults.getBestSetSize() << ".\n";
         std::cout << "Cluster Area SD = " << currentResults.getBestSetArea() << ".\n";
-        std::cout << "Total Hop Weigth = " << currentResults.getBestHopWeigth() << ".\n";
+        std::cout << "Total Hyperedge Cut Weight = " << currentResults.getBestHopWeigth() << ".\n";
         std::cout << "Total Runtime = " << currentResults.getBestRuntime() << ".\n\n";
 }
 
